@@ -11,7 +11,7 @@ pygame.display.set_caption("Conway's Game of Life Sim")
 def main():
     running = True
     clock = pygame.time.Clock()
-    gen.stateAssign()
+    gen.make2DArray()
 
     while running:
         WINDOW.fill((0,0,0))

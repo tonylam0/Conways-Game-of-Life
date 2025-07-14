@@ -18,15 +18,6 @@ def make2DArray():  # creates a 2D array which will represent the grid
         grid.append([])
         for j in range(rows):
             grid[i].append([])
-
-    return grid
-
-def stateAssign():
-    make2DArray()
-
-    for i in range(columns):
-        for j in range(rows):
             grid[i][j].append(math.floor(random.random() * 1.2))  # randomly assigns a state to each cell in the grid
 
     return grid
-
