@@ -10,7 +10,7 @@ pygame.display.set_caption("Conway's Game of Life Sim")
 
 def main():
     running = True
-    genFlag = True
+    genFlag = True  # used to check for pausing
     clock = pygame.time.Clock()
     gen.make2DArray()
 
@@ -21,10 +21,12 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
+
             elif event.type == pygame.MOUSEBUTTONUP:
                     if event.button == 1:
                         gen.mousePos = event.pos
-                        gen.createSignal = True
+                        gen.switchSignal = True
+
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_r:
                     gen.grid = []
@@ -36,6 +38,15 @@ def main():
 
         for i in range(1, gen.columns - 1):
             for j in range(1, gen.rows - 1):
+                # finds which cell the mouse position clicked on by finding the column and row
+                # column and row is found by dividing by the resolution 
+                if gen.mousePos[0] // gen.RESOLUTION == i and gen.mousePos[1] // gen.RESOLUTION == j and gen.switchSignal:
+                    if gen.grid[i][j] == 0:  # clicking a dead cell turns it into an alive cell  
+                        gen.grid[i][j] = 1
+                    else:
+                        gen.grid[i][j] = 0  # clicking an alive cell turns it into a dead cell
+                    gen.switchSignal = False
+
                 if gen.grid[i][j] == 1:
                     x = i * gen.RESOLUTION
                     y = j * gen.RESOLUTION
