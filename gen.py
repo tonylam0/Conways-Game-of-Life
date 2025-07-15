@@ -6,6 +6,9 @@ RESOLUTION = 20  # this constant represents the size of the cells within the gri
 grid = []
 columns, rows = 0, 0  # placeholder values
 
+mousePos = (0, 0)  # placeholder values for x and y position of mouse
+createSignal = False  # this signals the update function to create a life
+
 def make2DArray():  # creates a 2D array which will represent the grid
     global columns
     global rows
@@ -40,10 +43,14 @@ def countNeighbors(cellColumn, cellRow, currentState):
 
 def updateState():  # updates the state of individual cells based on its surrounding cells
     global grid
+    global createSignal
 
     for i in range(1, columns - 1):  # the altered range is to prevent calculation on border cells
         for j in range(1, rows - 1):
             grid[i][j] = countNeighbors(i, j, grid[i][j])
+            if mousePos[0] // RESOLUTION == i and mousePos[1] // RESOLUTION == j and createSignal:
+                grid[i][j] = 1
+                createSignal = False
     
     return grid
 

@@ -21,6 +21,10 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
+            elif event.type == pygame.MOUSEBUTTONUP:
+                    if event.button == 1:
+                        gen.mousePos = event.pos
+                        gen.createSignal = True
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_r:
                     gen.grid = []
