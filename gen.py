@@ -52,3 +52,4 @@ def updateState():
             grid[i][j] = countNeighbors(i, j, grid[i][j])
     
     return grid
+

@@ -7,15 +7,39 @@ pygame.init()
 WINDOW = pygame.display.set_mode((gen.WIDTH, gen.HEIGHT))
 pygame.display.set_caption("Conway's Game of Life Sim")
 
+def checkLibraryEmpty():
+    try:
+        with open("populationTracker.json", "r") as file:
+            data = json.load(file)
+            if not data:
+                with open("populationTracker.json", "w") as file:
+                    json.dump({}, file)
+    except (FileNotFoundError, json.JSONDecodeError):
+        with open("populationTracker.json", "w") as file:
+            json.dump({}, file)
+
+def reset():  # used to automatically reset the cellular automaton after a certain amount of generations
+    gen.grid = []
+    gen.make2DArray()
+
+def matchResetCount():  # handles the error if the resetCount is different than the popTracker
+    with open("populationTracker.json", "r") as file:
+        length = len(json.load(file))
+
+    with open("resetCount.txt", "w") as file:
+        file.write(str(length))
+
 def main():
     running = True
     genFlag = True  # used to check for pausing
     clock = pygame.time.Clock()
+    checkLibraryEmpty()
+    matchResetCount()
 
-    population = {}
-    aliveCount = 0
-    genCount = 0
-    resetCount = 0
+    population = {}  # used to store the amount of alive cells per generation
+    aliveCount = 0  # amount of alive cells in a generation
+    genCount = 0  # amount of generations an automaton has gone through
+    resetCount = 0  # amount of times the simulation has been reset
 
     with open("resetCount.txt", "r") as file:
         resetCount = int(file.read())
@@ -65,8 +89,7 @@ def main():
                         json.dump(populationLst, file, indent=1)
 
                     genCount = 0
-                    gen.grid = []
-                    gen.make2DArray()
+                    reset()
 
                 elif event.key == pygame.K_SPACE and genFlag:
                     genFlag = False
@@ -86,7 +109,8 @@ def main():
                     gen.switchSignal = False
 
                 if gen.grid[i][j] == 1:
-                    aliveCount += 1
+                    if genFlag:
+                        aliveCount += 1
 
                     x = i * gen.RESOLUTION
                     y = j * gen.RESOLUTION
@@ -94,10 +118,23 @@ def main():
         
         if genFlag:
             gen.updateState()
+            population[genCount] = aliveCount
+            genCount += 1
+            aliveCount = 0  # reset in order to count the amount of alive cells in the next generation
 
-        population[genCount] = aliveCount
-        genCount += 1
-        aliveCount = 0
+        if genCount > 100:  # resets automaton when the simulation reaches 100 generations
+            resetCount += 1
+            currentGen = {resetCount: population}
+
+            with open("populationTracker.json", "r") as file:
+                populationLst = json.load(file)
+                populationLst.update(currentGen)
+
+            with open("populationTracker.json", "w") as file:
+                json.dump(populationLst, file, indent=1)
+
+            genCount = 0
+            reset()
 
         pygame.display.update()
 
