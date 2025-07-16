@@ -89,6 +89,7 @@ def main():
                         json.dump(populationLst, file, indent=1)
 
                     genCount = 0
+                    population = {}  # population has to reset to restart the population tracking
                     reset()
 
                 elif event.key == pygame.K_SPACE and genFlag:
@@ -134,6 +135,7 @@ def main():
                 json.dump(populationLst, file, indent=1)
 
             genCount = 0
+            population = {}
             reset()
 
         pygame.display.update()

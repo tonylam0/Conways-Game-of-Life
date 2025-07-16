@@ -14,12 +14,11 @@ with open("populationTracker.json", "r") as file:
         color = (random.random(), random.random(), random.random())
 
         for genCount in range(1, len(populationLst[resetCount])):
-            plt.plot(genCount, populationLst[resetCount][str(genCount)], color=color, marker='o')
+            plt.plot(genCount, populationLst[resetCount][str(genCount)], color=color, marker='.')
 
 plt.title("Cellular Life Over Time")
 plt.xlabel("Generations")
 plt.ylabel("Alive Cell Population")
 plt.xlim(0, 100)
-# plt.ylim(0, 70)
 plt.show()
 
