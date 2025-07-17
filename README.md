@@ -14,7 +14,7 @@ The future state of cells is determined by its neighborhood (8 surrounding cells
 4. if an dead cell has exactly 3 surrounding alive cells -> become alive by reproduction
 
 ## Features
-![Stable Life Simulation][/photos/Stable Life in Conway's GOL.jpg] ![Populated Simulation][/photos/Conway's GOF Preview Card.jpg]
+<img width="300" alt=Stable Life Simulation src="/photos/Stable Life in Conway's GOL.jpg" />
 
 1. Added an **automatic population tracker** that counts the amount of alive cells in a simulation over multiple generations
 2. An **automatic stable life tracker** that tracks how long it took (amount of generations) & how many alive cells there were when a simulation reached stable life
