@@ -30,6 +30,15 @@ def matchResetCount():  # handles the error if the resetCount is different than 
     with open("resetCount.txt", "w") as file:
         file.write(str(length))
 
+    with open("stabilityTracker.json", "r") as file:
+        stabilityLst = json.load(file)
+
+    if len(stabilityLst) > length:
+        stabilityLst = [[],[]]
+        
+        with open("stabilityTracker.json", "w") as file:
+            json.dump(stabilityLst, file)
+
 def main():
     running = True
     genFlag = True  # used to check for pausing
