@@ -25,8 +25,6 @@ def make2DArray():
             # the multiplier determines the amount of live cells there are -> higher chance of 1's
             grid[i].append(math.floor(random.random() * 1.1))
 
-    return grid
-
 # iterates through the eight surrounding cells of a singular cell & counts the amount of alive cells
 def countNeighbors(cellColumn, cellRow, currentState): 
     count = 0
@@ -51,5 +49,3 @@ def updateState():
         for j in range(1, rows - 1):
             grid[i][j] = countNeighbors(i, j, grid[i][j])
     
-    return grid
-

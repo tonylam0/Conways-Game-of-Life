@@ -1,28 +1,29 @@
 import pygame
 import gen
 import json
+import copy
 
 
 pygame.init()
 WINDOW = pygame.display.set_mode((gen.WIDTH, gen.HEIGHT))
 pygame.display.set_caption("Conway's Game of Life Sim")
 
-def checkLibraryEmpty():
+def checkLibraryEmpty(fileName, type):
     try:
-        with open("populationTracker.json", "r") as file:
+        with open(fileName, "r") as file:
             data = json.load(file)
             if not data:
-                with open("populationTracker.json", "w") as file:
-                    json.dump({}, file)
+                with open(fileName, "w") as file:
+                    json.dump(type, file)
     except (FileNotFoundError, json.JSONDecodeError):
-        with open("populationTracker.json", "w") as file:
-            json.dump({}, file)
+        with open(fileName, "w") as file:
+            json.dump(type, file)
 
 def reset():  # used to automatically reset the cellular automaton after a certain amount of generations
     gen.grid = []
     gen.make2DArray()
 
-def matchResetCount():  # handles the error if the resetCount is different than the popTracker
+def matchResetCount():  # handles the error if the resetCount is different than the popTracker count
     with open("populationTracker.json", "r") as file:
         length = len(json.load(file))
 
@@ -32,11 +33,15 @@ def matchResetCount():  # handles the error if the resetCount is different than 
 def main():
     running = True
     genFlag = True  # used to check for pausing
+    stableFlag = False  # used to check if program should track stable life populaiton
     clock = pygame.time.Clock()
-    checkLibraryEmpty()
+
+    checkLibraryEmpty("populationTracker.json", {})
+    checkLibraryEmpty("stabilityTracker.json", [[],[]])
     matchResetCount()
 
     population = {}  # used to store the amount of alive cells per generation
+    prevGrid = []  # used to check for stable life
     aliveCount = 0  # amount of alive cells in a generation
     genCount = 0  # amount of generations an automaton has gone through
     resetCount = 0  # amount of times the simulation has been reset
@@ -90,6 +95,7 @@ def main():
 
                     genCount = 0
                     population = {}  # population has to reset to restart the population tracking
+                    stableFlag = False  # resets stability check
                     reset()
 
                 elif event.key == pygame.K_SPACE and genFlag:
@@ -118,8 +124,21 @@ def main():
                     pygame.draw.rect(WINDOW, (255, 255, 255), (x, y, gen.RESOLUTION, gen.RESOLUTION))
         
         if genFlag:
+            # deepcopy used b/c the nested list in grid will still be referenced with a shallow copy
+            prevGrid = copy.deepcopy(gen.grid)
             gen.updateState()
             population[genCount] = aliveCount
+
+            if gen.grid == prevGrid and not stableFlag:  # used to check for stable life
+                with open("stabilityTracker.json", "r") as file:
+                    stabilityLst = json.load(file)
+                    stabilityLst[0].append(genCount)
+                    stabilityLst[1].append(aliveCount)
+
+                with open("stabilityTracker.json", "w") as file:
+                    json.dump(stabilityLst, file)
+                stableFlag = True
+
             genCount += 1
             aliveCount = 0  # reset in order to count the amount of alive cells in the next generation
 
@@ -136,6 +155,7 @@ def main():
 
             genCount = 0
             population = {}
+            stableFlag = False
             reset()
 
         pygame.display.update()
