@@ -20,12 +20,15 @@ def make2DArray():
 
     for i in range(columns):
         grid.append([])
-        for j in range(rows):
-            # randomly assigns a state to each cell in the grid
-            # the multiplier determines the amount of live cells there are -> higher chance of 1's
-            grid[i].append(math.floor(random.random() * 1.1))
+        for j in range(rows):  # makes all the border cells dead to prevent bugs
+            if i == 0 or i == columns - 1 or j == 0 or j == rows - 1:
+                grid[i].append(0)
+            else:
+                # randomly assigns a state to each cell in the grid
+                # the multiplier determines the amount of live cells there are -> higher chance of 1's
+                grid[i].append(math.floor(random.random() * 1.1))
 
-# iterates through the eight surrounding cells of a singular cell & counts the amount of alive cells
+# counts the amount of alive cells from the 8 surrounding cells of an individual cell
 def countNeighbors(cellColumn, cellRow, currentState): 
     count = 0
 
