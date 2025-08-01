@@ -1,9 +1,10 @@
 # Conways-Game-of-Life
 
-A Python recreation of the famous cellular automaton **Conway’s Game of Life**, built using **Pygame**.
 
 ## About This Project
-This simulationn models life on a 2D grid, where:
+A Python recreation of the famous cellular automaton **Conway’s Game of Life**, built using **Pygame**.
+
+This simulation models life on a 2D grid, where:
 - Alive cells are represented by 1's (white squares)
 - Dead cells are represented by 0's (black squares)
 - Each cell's state is determined by the eight neighboring cells around it
